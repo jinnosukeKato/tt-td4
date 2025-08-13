@@ -8,7 +8,9 @@ module tt_um_cpu_test(
     output reg [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
+    input  wire       rst_n,     // reset_n - low to reset
+    output reg [3:0] register_A,
+    output reg [3:0] register_B
   );
 
   assign uio_out = 0;
@@ -24,9 +26,18 @@ module tt_um_cpu_test(
   wire carry;
   wire [3:0] pc_out;
 
+  reg [3:0] opcode;
+  wire [3:0] immediate;
+
+  assign opcode = ui_in[3:0];
+  assign immediate = ui_in[7:4];
+
+  assign register_A = regA_out;
+  assign register_B = regB_out;
+
   CPU cpu(
-        .opcode(ui_in[3:0]),
-        .immediate(ui_in[7:4]),
+        .opcode(opcode),
+        .immediate(immediate),
         .regA_o(regA_out),
         .regB_o(regB_out),
         .pc_out(pc_out),

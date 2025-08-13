@@ -21,6 +21,12 @@ async def test_project(dut):
   dut._log.info("Test project behavior")
 
   # Test
-  dut.ui_in.value = 0b0101_0000 # ADD A, Im (Op:0000, Im:1010)
+  # ADD A, Im (Op:0000, Im:1010)
+  dut.ui_in.value = 0b0101_0000 
   await ClockCycles(dut.clk, 2)
-  assert dut.uo_out.value == 0b0101_0000
+  assert dut.register_A.value == 0b0101
+
+  # ADD B, Im (Op:0101, Im:1010)
+  dut.ui_in.value = 0b0101_1010
+  await ClockCycles(dut.clk, 2)
+  assert dut.register_B.value == 0b0101

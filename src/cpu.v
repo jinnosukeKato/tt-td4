@@ -35,32 +35,21 @@ module CPU (
     begin
       case (opcode)
         4'b0000: // ADD A,Im
-        begin
-          alu_result <= (register_A + immediate);
-          register_A <= alu_result;
-        end
-        4'b0101: // ADD B,Im
-        begin
-          alu_result <= (register_B + immediate);
-          register_B <= alu_result;
-        end
-        4'b0011: // MOV A,Im
-        begin
-          alu_result <= immediate;
-          register_A <= alu_result;
-        end
-        4'b0111: // MOV B, Im
-        begin
-          alu_result <= immediate;
-          register_B <= alu_result;
-        end
+          register_A <= register_A + immediate;
+        4'b1010: // ADD B,Im
+          register_B <= register_B + immediate;
+        4'b1100: // MOV A,Im
+          register_A <= immediate;
+        4'b1110: // MOV B, Im
+          register_B <= immediate;
         default:
           alu_result <= 4'b0;
       endcase
+      pc = pc + 1;
     end
   end
 
-  assign regOut = alu_result;
+  assign regOut = register_Out;
   assign pc_out = pc;
   assign regA_o = register_A;
   assign regB_o = register_B;
