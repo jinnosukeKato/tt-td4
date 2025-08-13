@@ -22,20 +22,20 @@ module tt_um_cpu_test(
     uo_out[3:0] <= 4'b0;
   end
 
-  wire [3:0] regA;
-  wire [3:0] regB;
+  wire [3:0] regA_out;
+  wire [3:0] regB_out;
   wire carry;
-  wire [3:0] pc_wire;
+  wire [3:0] pc_out;
+
   CPU cpu(
         .opcode(ui_in[3:0]),
         .immediate(ui_in[7:4]),
-        .regA_i(4'b0),
-        .regB_i(4'b0),
-        .regA_o(regA),
-        .regB_o(regB),
-        .pc(pc_wire),
+        .regA_o(regA_out),
+        .regB_o(regB_out),
+        .pc_out(pc_out),
         .regOut(uo_out[7:4]),
         .clk(clk),
-        .carry(carry)
+        .carry(carry),
+        .rst_n(rst_n)
       );
 endmodule
