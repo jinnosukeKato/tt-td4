@@ -17,10 +17,7 @@ module tt_um_cpu_test(
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, rst_n, 1'b0};
 
-  always @(negedge rst_n)
-  begin
-    uo_out[3:0] <= 4'b0;
-  end
+  assign uo_out[3:0] = 4'b0;
 
   wire [3:0] regA_out;
   wire [3:0] regB_out;
