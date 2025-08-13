@@ -38,21 +38,55 @@ async def test_project(dut):
   await ClockCycles(dut.clk, 1) # NOPで出力が立ち上がるのを待ってからassert
   assert dut.uo_out.value == 0b0101_0101
 
+  # Reset
+  dut._log.info("Reset")
+  dut.ena.value = 1
+  dut.ui_in.value = 0
+  dut.uio_in.value = 0
+  dut.rst_n.value = 0
+  await ClockCycles(dut.clk, 1)
+  dut.rst_n.value = 1
+  await ClockCycles(dut.clk, 1)
+
   # MOV A, Im (Op: 0011, Im: 1111)
   dut._log.info("mov A, Im")
   dut.ui_in.value = 0b1111_1100
   await ClockCycles(dut.clk, 1)
   dut.ui_in.value = 0b0000_0000
   await ClockCycles(dut.clk, 1)
-  assert dut.uo_out.value == 0b0101_1111
+  assert dut.uo_out.value == 0b0000_1111
 
-  # MOV B, Im (Op: 0111, Im: 1111)
+  # MOV B, Im (Op: 0111, Im: 1001)
   dut._log.info("mov B, Im")
-  dut.ui_in.value = 0b1111_1110
+  dut.ui_in.value = 0b1001_1110
   await ClockCycles(dut.clk, 1)
   dut.ui_in.value = 0b0000_0000
   await ClockCycles(dut.clk, 1)
-  assert dut.uo_out.value == 0b1111_1111
+  assert dut.uo_out.value == 0b1001_1111
+
+  # MOV A, B (Op: 0001, Im: any)
+  dut._log.info("mov A, B")
+  dut.ui_in.value = 0b0000_1000
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b1001_1001
+
+  # MOV A, Im (Op: 0011, Im: 0000)
+  dut._log.info("mov A, Im")
+  dut.ui_in.value = 0b0000_1100
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b1001_0000
+
+  # MOV B, A (Op: 0100, Im: any)
+  dut._log.info("mov B, A")
+  dut.ui_in.value = 0b0000_0010
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b0000_0000
 
   dut._log.info("Test finished")
 

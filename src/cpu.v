@@ -42,6 +42,10 @@ module CPU (
           register_A <= immediate;
         4'b1110: // MOV B, Im
           register_B <= immediate;
+        4'b1000: // MOV A, B
+          register_A <= register_B;
+        4'b0010: // MOV B, A
+          register_B <= register_A;
         default:
           alu_result <= 4'b0;
       endcase
