@@ -12,8 +12,8 @@ module CPU (
     output wire carry
   );
 
-  wire reg_val = 4'b0000;
-  wire imm_val = 4'b0000;
+  wire [3:0] reg_val = 4'b0;
+  wire [3:0] imm_val = 4'b0;
   reg [3:0] alu_result;
 
   reg [3:0] register_A;
