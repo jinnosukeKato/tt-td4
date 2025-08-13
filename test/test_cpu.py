@@ -38,5 +38,21 @@ async def test_project(dut):
   await ClockCycles(dut.clk, 1) # NOPで出力が立ち上がるのを待ってからassert
   assert dut.uo_out.value == 0b0101_0101
 
+  # MOV A, Im (Op: 0011, Im: 1111)
+  dut._log.info("mov A, Im")
+  dut.ui_in.value = 0b1111_1100
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b0101_1111
+
+  # MOV B, Im (Op: 0111, Im: 1111)
+  dut._log.info("mov B, Im")
+  dut.ui_in.value = 0b1111_1110
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b1111_1111
+
   dut._log.info("Test finished")
 
