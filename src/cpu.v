@@ -12,10 +12,6 @@ module CPU (
     output wire carry
   );
 
-  wire [3:0] reg_val = 4'b0;
-  wire [3:0] imm_val = 4'b0;
-  reg [3:0] alu_result;
-
   reg [3:0] register_A;
   reg [3:0] register_B;
   reg [3:0] pc;
@@ -29,7 +25,6 @@ module CPU (
       register_B <= 4'b0;
       pc <= 4'b0;
       register_Out <= 4'b0;
-      alu_result <= 4'b0;
     end
     else
     begin
@@ -47,9 +42,9 @@ module CPU (
         4'b0010: // MOV B, A
           register_B <= register_A;
         default:
-          alu_result <= 4'b0;
+          ;
       endcase
-      pc = pc + 1;
+      pc <= pc + 1;
     end
   end
 
