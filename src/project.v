@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module tt_um_example (
+module tt_um_td4 (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -23,19 +23,29 @@ module tt_um_example (
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, 1'b0};
 
-  wire [3:0] address = uio_in[7:4]; // メモリのアドレス
   wire [3:0] opcode_in = ui_in[3:0]; // メモリへのオペコード入力
   wire [3:0] immediate_in = uio_in[3:0]; // メモリへの即値入力
   wire mem_write = ~ui_in[6]; // メモリへの書き込み信号（反転）
 
+  wire [3:0] pc;
+
   wire [3:0] opcode_out;// メモリからのオペコード出力
   wire [3:0] immediate_out; // メモリからの即値出力
 
-  assign uo_out[3:0] = opcode_out;
-  assign uo_out[7:4] = immediate_out;
+  CPU cpu(
+        .opcode(opcode_out),
+        .immediate(immediate_out),
+        .regA_o(),
+        .regB_o(),
+        .pc_out(pc),
+        .regOut(),
+        .carry(),
+        .clk(clk),
+        .rst_n(rst_n)
+      );
 
   Memory memory(
-           .address(address),
+           .address(pc),
            .opcode_in(opcode_in),
            .immediate_in(immediate_in),
            .opcode_out(opcode_out),
