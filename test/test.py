@@ -22,6 +22,17 @@ async def test_project(dut):
   dut._log.info("Test project behavior")
 
   # Test
+  # メモリへの値の書き込みと読み込み
+  dut._log.info("Write value(0101 0000) to mem addr: 0000")
+  dut.ui_in.value = 0b1000_0000
+  dut.uio_in.value = 0b0000_0101
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b1100_0000
+  await ClockCycles(dut.clk, 1)
+
+  dut.ui_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b0101_0000
 
   dut._log.info("Test finished")
 
