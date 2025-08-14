@@ -20,9 +20,6 @@ module tt_um_td4 (
   assign uio_out = 0;
   assign uio_oe  = 0;
 
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, 1'b0};
-
   // memory in
   wire [3:0] opcode_in = ui_in[3:0]; // メモリへのオペコード入力
   wire [3:0] immediate_in = uio_in[3:0]; // メモリへの即値入力
@@ -38,6 +35,9 @@ module tt_um_td4 (
   wire [3:0] register_B;
   wire [3:0] register_out;
   wire carry;
+
+  // List all unused inputs to prevent warnings
+  wire _unused = &{ena, ui_in[5:4], ui_in[7], uio_in[7:4], pc, register_A, register_B, register_out, carry, 1'b0};
 
   CPU cpu(
         .opcode(opcode_out),
