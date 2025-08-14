@@ -18,7 +18,6 @@ module tt_um_td4 (
 
   // 未使用端子の接続（使わない入力ビットを潰す）
   wire _unused = &{ena, ui_in[5:4], 1'b0};
-  assign uio_out[6:4] = 0;
 
   // memory in
   reg [3:0] mem_address; // メモリのアクセス先アドレス
@@ -77,9 +76,13 @@ module tt_um_td4 (
          );
 
   // 各モードでの接続先の選択
-  always @(posedge clk)
+  always @(posedge clk or negedge rst_n)
   begin
-    if (is_load_mode & is_read_mode)
+    if (!rst_n)
+    begin
+      uio_out[6:4] <= 0;
+    end
+    else if (is_load_mode & is_read_mode)
     begin
       // read mode
       uo_out[3:0] <= opcode_out;
