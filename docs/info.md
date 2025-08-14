@@ -10,12 +10,20 @@ You can also include images in this folder and reference them in the markdown. E
 ## How it works
 
 A 4bit toy CPU "TD4".
-TODO: write "How it works"
+
+This chip has a program memory and a CPU.  
+It has three modes; "Load", "Read" and "Execution"
+The mode can be selected with input[7].
+
+Please check the detail of pin assignments by pinouts.
 
 ## How to test
 
-TODO: write "How to test"
+```
+cd test/
+make -B
+```
 
 ## External hardware
 
-- some LED or an Arduino
+- Some LED or an Arduino for read or write data
