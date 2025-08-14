@@ -57,6 +57,6 @@ module CPU (
   assign pc_out = pc;
   assign regA_o = register_A;
   assign regB_o = register_B;
-  assign carry = 4'b0;
+  assign carry = 1'b0;
 
 endmodule
