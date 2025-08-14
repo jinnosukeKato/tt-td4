@@ -28,18 +28,16 @@ async def test_project(dut):
   dut.uio_in.value = 0b0000_1011 # Im: 1101 (MSL, LSB逆)
   await ClockCycles(dut.clk, 1)
 
-  # NOP
-  dut.ui_in.value = 0b0000_0000
+  dut._log.info("Write value to mem addr: 0001")
+  dut.ui_in.value = 0b0000_1010 # ADD B, Im
+  dut.uio_in.value = 0b0001_0011 # Im: 1100 (MSL, LSB逆)
   await ClockCycles(dut.clk, 1)
 
   # 実行
   dut._log.info("Execution operation")
   dut.ui_in.value = 0b1000_0000
-  await ClockCycles(dut.clk, 1)
-
-  # NOP
-  await ClockCycles(dut.clk, 1)
-  assert dut.uo_out.value == 0b_0000_1011 # reg aに1011が入っているはず
+  await ClockCycles(dut.clk, 3)
+  assert dut.uo_out.value == 0b_0011_1011 # reg aに1011が入っているはず
 
   dut._log.info("Test finished")
 
