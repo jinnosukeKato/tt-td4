@@ -30,6 +30,7 @@ module CPU (
       register_B <= 4'b0;
       pc <= 4'b0;
       register_Out <= 4'b0;
+      register_carry <= 1'b0;
     end
     else
     begin
