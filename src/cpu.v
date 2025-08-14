@@ -66,7 +66,9 @@ module CPU (
           default:
             ;
         endcase
-        pc <= pc + 1;
+
+        if (opcode[3:0] != 3'b111)
+          pc <= pc + 1;
       end
     end
   end
