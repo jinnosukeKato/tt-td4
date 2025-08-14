@@ -20,6 +20,7 @@ module CPU (
   reg [3:0] register_B;
   reg [3:0] pc;
   reg [3:0] register_Out;
+  reg register_carry;
 
   always @(posedge clk or negedge rst_n)
   begin
@@ -36,9 +37,9 @@ module CPU (
       begin
         case (opcode)
           4'b0000: // ADD A,Im
-            register_A <= register_A + immediate;
+            {register_carry, register_A} <= register_A + immediate;
           4'b1010: // ADD B,Im
-            register_B <= register_B + immediate;
+            {register_carry, register_B} <= register_B + immediate;
           4'b1100: // MOV A,Im
             register_A <= immediate;
           4'b1110: // MOV B, Im
@@ -47,6 +48,21 @@ module CPU (
             register_A <= register_B;
           4'b0010: // MOV B, A
             register_B <= register_A;
+          4'b1111: // JMP Im
+            pc <= immediate;
+          4'b0111: // JNC Im
+            if (!carry)
+            begin
+              pc <= immediate;
+            end
+          4'b0100: // IN A
+            register_A <= io_input;
+          4'b0110: // IN B
+            register_B <= io_input;
+          4'b1001: // OUT B
+            register_Out <= register_B;
+          4'b1101: // OUT Im
+            register_Out <= immediate;
           default:
             ;
         endcase
@@ -59,6 +75,6 @@ module CPU (
   assign pc_out = pc;
   assign regA_o = register_A;
   assign regB_o = register_B;
-  assign carry = 1'b0;
+  assign carry = register_carry;
 
 endmodule
