@@ -32,25 +32,25 @@ module tt_um_td4 (
 
   // registers
   wire [3:0] pc;
-  wire [3:0] register_A;
-  wire [3:0] register_B;
-  wire [3:0] register_out;
-  wire carry;
+  // wire [3:0] register_A;
+  // wire [3:0] register_B;
+  // wire [3:0] register_out;
+  // wire carry;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, ui_in[5:4], ui_in[7], uio_in[7:4], pc, register_A, register_B, register_out, carry, 1'b0};
+  wire _unused = &{ena, ui_in[5:4], ui_in[7], uio_in[7:4], 1'b0};
 
-  // CPU cpu(
-  //       .opcode(opcode_out),
-  //       .immediate(immediate_out),
-  //       .regA_o(register_A),
-  //       .regB_o(register_B),
-  //       .pc_out(pc),
-  //       .regOut(register_out),
-  //       .carry(carry),
-  //       .clk(clk),
-  //       .rst_n(rst_n)
-  //     );
+  CPU cpu(
+        .opcode(opcode_out),
+        .immediate(immediate_out),
+        // .regA_o(register_A),
+        // .regB_o(register_B),
+        .pc_out(pc),
+        // .regOut(register_out),
+        // .carry(carry),
+        .clk(clk),
+        .rst_n(rst_n)
+      );
 
   Memory memory(
            .address(pc),
