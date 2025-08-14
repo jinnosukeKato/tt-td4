@@ -16,10 +16,22 @@ module tt_um_td4 (
     input  wire       rst_n     // reset_n - low to reset
   );
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out = 0;
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+  // 出力を内部信号に接続（最適化で消されないように可視化）
+  // RegA を下位 4bit、RegB を上位 4bit に出力
+  // 双方向ポートは uio[7] のみ Carry を出す例。その他は入力のまま。
+  wire [3:0] pc;
+  wire [3:0] register_A;
+  wire [3:0] register_B;
+  wire [3:0] register_out;
+  wire       carry;
+
+  assign uo_out[3:0] = register_A;
+  assign uo_out[7:4] = register_B;
+
+  // 未使用入力群（ena, ui_in[7:4], uio_in[7:4]) を畳み込んで 1bit 出力し、シンクを作る
+  wire unused_in_fold = ^{ena, ui_in[7:4], uio_in[7:4]};
+  assign uio_out     = {carry, unused_in_fold, 6'b0};
+  assign uio_oe      = 8'b1100_0000; // uio[7], uio[6] を出力、他は入力
 
   // memory in
   wire [3:0] opcode_in; // メモリへのオペコード入力
@@ -34,15 +46,8 @@ module tt_um_td4 (
   wire [3:0] opcode_out;// メモリからのオペコード出力
   wire [3:0] immediate_out; // メモリからの即値出力
 
-  // registers
-  wire [3:0] pc;
-  wire [3:0] register_A;
-  wire [3:0] register_B;
-  wire [3:0] register_out;
-  wire carry;
-
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, ui_in[5:4], ui_in[7], uio_in[7:4], pc, register_A, register_B, register_out, carry, 1'b0};
+  // 未使用端子の接続（使わない入力ビットを潰す）
+  wire _unused = &{ena, ui_in[5:4], ui_in[7], uio_in[7:4], 1'b0};
 
   CPU cpu(
         .opcode(opcode_out),
