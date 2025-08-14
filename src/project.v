@@ -22,9 +22,13 @@ module tt_um_td4 (
   assign uio_oe  = 0;
 
   // memory in
-  wire [3:0] opcode_in = ui_in[3:0]; // メモリへのオペコード入力
-  wire [3:0] immediate_in = uio_in[3:0]; // メモリへの即値入力
-  wire mem_write = ~ui_in[6]; // メモリへの書き込み信号（反転）
+  wire [3:0] opcode_in; // メモリへのオペコード入力
+  wire [3:0] immediate_in; // メモリへの即値入力
+  wire mem_write; // メモリへの書き込み信号（反転）
+
+  assign opcode_in = ui_in[3:0];
+  assign immediate_in = uio_in[3:0];
+  assign mem_write = ~ui_in[6];
 
   // memory out
   wire [3:0] opcode_out;// メモリからのオペコード出力
@@ -40,17 +44,17 @@ module tt_um_td4 (
   // List all unused inputs to prevent warnings
   wire _unused = &{ena, ui_in[5:4], ui_in[7], uio_in[7:4], pc, register_A, register_B, register_out, carry, 1'b0};
 
-  // CPU cpu(
-  //       .opcode(opcode_out),
-  //       .immediate(immediate_out),
-  //       .regA_o(register_A),
-  //       .regB_o(register_B),
-  //       .pc_out(pc),
-  //       .regOut(register_out),
-  //       .carry(carry),
-  //       .clk(clk),
-  //       .rst_n(rst_n)
-  //     );
+  CPU cpu(
+        .opcode(opcode_out),
+        .immediate(immediate_out),
+        .regA_o(register_A),
+        .regB_o(register_B),
+        .pc_out(pc),
+        .regOut(register_out),
+        .carry(carry),
+        .clk(clk),
+        .rst_n(rst_n)
+      );
 
   Memory memory(
            .address(pc),
