@@ -13,6 +13,8 @@ module CPU (
     output wire carry
   );
 
+  wire _unused = &{io_input};
+
   reg [3:0] register_A;
   reg [3:0] register_B;
   reg [3:0] pc;
