@@ -27,6 +27,7 @@ async def test_project(dut):
   dut.ui_in.value = 0b1000_0000
   dut.uio_in.value = 0b0000_0101
   await ClockCycles(dut.clk, 1)
+  dut._log.info("Read value from mem addr: 0000")
   dut.ui_in.value = 0b1100_0000
   await ClockCycles(dut.clk, 1)
 
