@@ -3,6 +3,7 @@
 module CPU (
     input wire [3:0] opcode,
     input wire [3:0] immediate,
+    input wire [3:0] io_input,
     output wire [3:0] regA_o,
     output wire [3:0] regB_o,
     output wire [3:0] pc_out,
