@@ -58,3 +58,21 @@ async def test_add_reg_im(dut):
   dut.ui_in.value = 0b1000_0000 # 実行モードに設定
   await ClockCycles(dut.clk, 3)
   assert dut.uo_out.value == 0b_0011_1011 # reg aに1011が入っているはず
+
+@cocotb.test()
+async def test_mov_reg_im(dut):
+  clock = Clock(dut.clk, 10, units="us")
+  cocotb.start_soon(clock.start())
+  await do_reset(dut)
+
+  # メモリへの値の書き込み
+  dut.ui_in.value = 0b0000_1100 # MOV A, Im
+  dut.uio_in.value = 0b0000_1011 # Im: 1101 (MSB, LSB逆)
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_1110 # MOV B, Im
+  dut.uio_in.value = 0b0001_0011 # Im: 1100 (MSB, LSB逆)
+  await ClockCycles(dut.clk, 1)
+
+  dut.ui_in.value = 0b1000_0000 # 実行モードに設定
+  await ClockCycles(dut.clk, 3)
+  assert dut.uo_out.value == 0b_0011_1011 # reg aに1011が入っているはず
