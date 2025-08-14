@@ -41,20 +41,21 @@ module tt_um_td4 (
 
   // モード関連（連続代入で扱う）
   wire is_read_mode = ui_in[6];
-  wire is_load_mode = ui_in[7];
-  assign mem_write = ~is_read_mode & is_load_mode;
+  wire is_exec_mode = ui_in[7];
+  assign mem_write = ~is_read_mode & ~is_exec_mode;
 
   // 各モジュールへの入力
   assign opcode_in = ui_in[3:0];
   assign io_input = ui_in[3:0];
   assign immediate_in = uio_in[3:0];
   // メモリアドレスは Load/Read 時は外部入力 Exec 時は PCより指定
-  assign mem_address = is_load_mode ? uio_in[7:4] : pc;
+  assign mem_address = is_exec_mode ? pc : uio_in[7:4];
 
   CPU cpu(
         .opcode(opcode_out),
         .immediate(immediate_out),
         .io_input(io_input),
+        .exec_mode(is_exec_mode),
         .regA_o(register_A),
         .regB_o(register_B),
         .pc_out(pc),
@@ -78,12 +79,12 @@ module tt_um_td4 (
   // 各モードでの接続
   // Read モード: uo_out にメモリ内容を表示
   // Exec モード: uo_out にレジスタ、uio_out に出力/キャリーフラグ、uio_oe を出力有効
-  assign uo_out   = (is_load_mode & is_read_mode)
+  assign uo_out   = (!is_exec_mode & is_read_mode)
          ? {immediate_out, opcode_out}
-         : {register_A, register_B};
-  assign uio_out  = (!is_load_mode)
+         : {register_B, register_A};
+  assign uio_out  = (!is_exec_mode)
          ? {carry, 3'b000, register_out}
          : 8'b0;
-  assign uio_oe   = (!is_load_mode) ? 8'hFF : 8'h00;
+  assign uio_oe   = (!is_exec_mode) ? 8'hFF : 8'h00;
 
 endmodule

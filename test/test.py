@@ -23,19 +23,23 @@ async def test_project(dut):
 
   # Test
   # メモリへの値の書き込み
-  dut._log.info("Write value(0101 0000) to mem addr: 0000")
-  dut.ui_in.value = 0b1000_0000
-  dut.uio_in.value = 0b0000_0101
-  await ClockCycles(dut.clk, 1)
-  # メモリの読み込み
-  dut._log.info("Read value from mem addr: 0000")
-  dut.ui_in.value = 0b1100_0000
+  dut._log.info("Write value to mem addr: 0000")
+  dut.ui_in.value = 0b0000_0000 # ADD A, Im
+  dut.uio_in.value = 0b0000_1011 # Im: 1101 (MSL, LSB逆)
   await ClockCycles(dut.clk, 1)
 
   # NOP
   dut.ui_in.value = 0b0000_0000
   await ClockCycles(dut.clk, 1)
-  assert dut.uo_out.value == 0b0101_0000
+
+  # 実行
+  dut._log.info("Execution operation")
+  dut.ui_in.value = 0b1000_0000
+  await ClockCycles(dut.clk, 1)
+
+  # NOP
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b_0000_1011 # reg aに1011が入っているはず
 
   dut._log.info("Test finished")
 

@@ -4,6 +4,7 @@ module CPU (
     input wire [3:0] opcode,
     input wire [3:0] immediate,
     input wire [3:0] io_input,
+    input wire exec_mode,
     output wire [3:0] regA_o,
     output wire [3:0] regB_o,
     output wire [3:0] pc_out,
@@ -31,23 +32,26 @@ module CPU (
     end
     else
     begin
-      case (opcode)
-        4'b0000: // ADD A,Im
-          register_A <= register_A + immediate;
-        4'b1010: // ADD B,Im
-          register_B <= register_B + immediate;
-        4'b1100: // MOV A,Im
-          register_A <= immediate;
-        4'b1110: // MOV B, Im
-          register_B <= immediate;
-        4'b1000: // MOV A, B
-          register_A <= register_B;
-        4'b0010: // MOV B, A
-          register_B <= register_A;
-        default:
-          ;
-      endcase
-      pc <= pc + 1;
+      if (exec_mode)
+      begin
+        case (opcode)
+          4'b0000: // ADD A,Im
+            register_A <= register_A + immediate;
+          4'b1010: // ADD B,Im
+            register_B <= register_B + immediate;
+          4'b1100: // MOV A,Im
+            register_A <= immediate;
+          4'b1110: // MOV B, Im
+            register_B <= immediate;
+          4'b1000: // MOV A, B
+            register_A <= register_B;
+          4'b0010: // MOV B, A
+            register_B <= register_A;
+          default:
+            ;
+        endcase
+        pc <= pc + 1;
+      end
     end
   end
 
