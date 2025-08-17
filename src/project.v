@@ -82,9 +82,9 @@ module tt_um_td4 (
   assign uo_out   = (!is_exec_mode & is_read_mode)
          ? {immediate_out, opcode_out}
          : {register_B, register_A};
-  assign uio_out  = (!is_exec_mode)
+  assign uio_out  = (is_exec_mode)
          ? {carry, 3'b000, register_out}
          : 8'b0;
-  assign uio_oe   = (!is_exec_mode) ? 8'hFF : 8'h00;
+  assign uio_oe   = (is_exec_mode) ? 8'hFF : 8'h00;
 
 endmodule
