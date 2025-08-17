@@ -157,3 +157,27 @@ async def test_jnc_im(dut):
   dut.ui_in.value = 0b1000_0000 # 実行モードに設定
   await ClockCycles(dut.clk, 5)
   assert dut.uo_out.value == 0b_1001_0000
+
+@cocotb.test()
+async def test_in_reg(dut):
+  clock = Clock(dut.clk, 10, units="us")
+  cocotb.start_soon(clock.start())
+  await do_reset(dut)
+
+  # メモリへの値の書き込み
+  dut.ui_in.value = 0b0000_0100 # IN A
+  dut.uio_in.value = 0b0000_0000
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_0110 # IN B
+  dut.uio_in.value = 0b0001_0000
+  await ClockCycles(dut.clk, 1)
+
+  dut.ui_in.value = 0b1000_0011 # 実行モード Input: 0011
+  await ClockCycles(dut.clk, 1)
+
+  dut.ui_in.value = 0b1000_0101 # 実行モード Input: 0101
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b0000_0011
+
+  await ClockCycles(dut.clk, 1)
+  assert dut.uo_out.value == 0b0101_0011
