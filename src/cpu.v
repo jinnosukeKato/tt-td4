@@ -70,6 +70,10 @@ module CPU (
 
         if (opcode[2:0] != 3'b111)
           pc <= pc + 1;
+
+        if (opcode != 4'b0000 && opcode != 4'b1010)
+          register_carry <= 1'b0;
+
       end
     end
   end
