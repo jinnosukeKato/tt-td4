@@ -114,3 +114,20 @@ async def test_mov_B_A(dut):
   assert dut.uo_out.value == 0b_1011_1011
 
 
+@cocotb.test()
+async def test_jmp_im(dut):
+  clock = Clock(dut.clk, 10, units="us")
+  cocotb.start_soon(clock.start())
+  await do_reset(dut)
+
+  # メモリへの値の書き込み
+  dut.ui_in.value = 0b0000_1111 # JMP Im
+  dut.uio_in.value = 0b0000_0011 # Im: 3 → pcを3に進める
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_1100 # MOV A, Im
+  dut.uio_in.value = 0b0011_1011 # Im: 1101 Addr: 3
+  await ClockCycles(dut.clk, 1)
+
+  dut.ui_in.value = 0b1000_0000 # 実行モードに設定
+  await ClockCycles(dut.clk, 3)
+  assert dut.uo_out.value == 0b_0000_1011
