@@ -215,6 +215,3 @@ async def test_out_im(dut):
   dut.ui_in.value = 0b1000_0000
   await ClockCycles(dut.clk, 2)
   assert dut.uio_out.value == 0b0000_1100
-
-
-
