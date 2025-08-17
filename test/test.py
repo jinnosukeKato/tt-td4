@@ -181,3 +181,40 @@ async def test_in_reg(dut):
 
   await ClockCycles(dut.clk, 1)
   assert dut.uo_out.value == 0b0101_0011
+
+@cocotb.test()
+async def test_out_b(dut):
+  clock = Clock(dut.clk, 10, units="us")
+  cocotb.start_soon(clock.start())
+  await do_reset(dut)
+
+  # メモリへの値の書き込み
+  dut.ui_in.value = 0b0000_1110 # MOV B, Im
+  dut.uio_in.value = 0b0000_0011 # Im: 0011
+  await ClockCycles(dut.clk, 1)
+  dut.ui_in.value = 0b0000_1001 # OUT B
+  dut.uio_in.value = 0b0001_0000
+  await ClockCycles(dut.clk, 1)
+  
+  dut.ui_in.value = 0b1000_0000 # 実行モード
+  await ClockCycles(dut.clk, 3)
+  assert dut.uio_out.value == 0b0000_0011
+
+@cocotb.test()
+async def test_out_im(dut):
+  clock = Clock(dut.clk, 10, units="us")
+  cocotb.start_soon(clock.start())
+  await do_reset(dut)
+
+  # メモリへの値の書き込み
+  dut.ui_in.value = 0b0000_1101 # OUT Im
+  dut.uio_in.value = 0b0000_1100 # Im: 1100
+  await ClockCycles(dut.clk, 1)
+
+  # 実行モード
+  dut.ui_in.value = 0b1000_0000
+  await ClockCycles(dut.clk, 2)
+  assert dut.uio_out.value == 0b0000_1100
+
+
+
