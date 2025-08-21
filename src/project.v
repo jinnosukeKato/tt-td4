@@ -56,11 +56,11 @@ module tt_um_td4 (
         .immediate(immediate_out),
         .io_input(io_input),
         .exec_mode(is_exec_mode),
-        .regA_o(register_A),
-        .regB_o(register_B),
-        .pc_out(pc),
-        .regOut(register_out),
-        .carry(carry),
+        .register_A(register_A),
+        .register_B(register_B),
+        .pc(pc),
+        .register_OUT(register_out),
+        .register_carry(carry),
         .clk(clk),
         .rst_n(rst_n)
       );

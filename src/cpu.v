@@ -5,22 +5,14 @@ module CPU (
     input wire [3:0] immediate,
     input wire [3:0] io_input,
     input wire exec_mode,
-    output wire [3:0] regA_o,
-    output wire [3:0] regB_o,
-    output wire [3:0] pc_out,
-    output wire [3:0] regOut,
+    output reg  [3:0] register_A,
+    output reg  [3:0] register_B,
+    output reg  [3:0] pc,
+    output reg  [3:0] register_OUT,
     input wire clk,
     input wire rst_n,
-    output wire carry
+    output reg register_carry
   );
-
-  wire _unused = &{io_input};
-
-  reg [3:0] register_A;
-  reg [3:0] register_B;
-  reg [3:0] pc;
-  reg [3:0] register_Out;
-  reg register_carry;
 
   always @(posedge clk or negedge rst_n)
   begin
@@ -29,7 +21,7 @@ module CPU (
       register_A <= 4'b0;
       register_B <= 4'b0;
       pc <= 4'b0;
-      register_Out <= 4'b0;
+      register_OUT <= 4'b0;
       register_carry <= 1'b0;
     end
     else
@@ -52,7 +44,7 @@ module CPU (
           4'b1111: // JMP Im
             pc <= immediate;
           4'b0111: // JNC Im
-            if (!carry)
+            if (!register_carry)
             begin
               pc <= immediate;
             end
@@ -61,9 +53,9 @@ module CPU (
           4'b0110: // IN B
             register_B <= io_input;
           4'b1001: // OUT B
-            register_Out <= register_B;
+            register_OUT <= register_B;
           4'b1101: // OUT Im
-            register_Out <= immediate;
+            register_OUT <= immediate;
           default:
             ;
         endcase
@@ -77,11 +69,4 @@ module CPU (
       end
     end
   end
-
-  assign regOut = register_Out;
-  assign pc_out = pc;
-  assign regA_o = register_A;
-  assign regB_o = register_B;
-  assign carry = register_carry;
-
 endmodule
