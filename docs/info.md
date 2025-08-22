@@ -9,7 +9,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-A 4bit toy CPU "TD4" from "CPU の創りかた" by 渡波郁.
+A 4bit toy CPU "TD4" from "[CPU の創りかた](https://book.mynavi.jp/ec/products/detail/id=22065)" by 渡波郁.
 
 This chip has a CPU and a program memory.  
 It has three modes; "Load", "Read" and "Execution".
@@ -28,7 +28,7 @@ For every operating mode, each pin has a different function; for detailed pin as
 
 ---
 
-渡波郁 著 "CPU の創りかた"の 4bit CPU TD4 を実装しました．
+渡波郁 著 "[CPU の創りかた](https://book.mynavi.jp/ec/products/detail/id=22065)"の 4bit CPU TD4 を実装しました．
 
 純粋な TD4 のみを実装したわけではなく，プログラムを格納する 8bit 16word の ROM もチップ上に実装しています．  
 そのため，プログラムを ROM に書き込む Write モード，ROM の値を読み取る Read モード，プログラムを実行する Execution モードの 3 モードを取ります．  
